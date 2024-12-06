@@ -1,0 +1,6 @@
+%{
+  "decimal": {:hex, :decimal, "2.2.0", "df3d06bb9517e302b1bd265c1e7f16cda51547ad9d99892049340841f3e15836", [:mix], [], "hexpm", "af8daf87384b51b7e611fb1a1f2c4d4876b65ef968fa8bd3adf44cff401c7f21"},
+  "ex_json_schema": {:hex, :ex_json_schema, "0.10.2", "7c4b8c1481fdeb1741e2ce66223976edfb9bccebc8014f6aec35d4efe964fb71", [:mix], [{:decimal, "~> 2.0", [hex: :decimal, repo: "hexpm", optional: false]}], "hexpm", "37f43be60f8407659d4d0155a7e45e7f406dab1f827051d3d35858a709baf6a6"},
+  "jason": {:hex, :jason, "1.4.4", "b9226785a9aa77b6857ca22832cffa5d5011a667207eb2a0ad56adb5db443b8a", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "c5eb0cab91f094599f94d55bc63409236a8ec69a21a67814529e8d5f6cc90b3b"},
+  "phx_json_rpc": {:hex, :phx_json_rpc, "0.7.0", "419e8d922a43c650a6a24e3ccb0c611647e1e5856ee627a5ea5d60278acfc3b9", [:mix], [{:ex_json_schema, "~> 0.10.1", [hex: :ex_json_schema, repo: "hexpm", optional: false]}, {:jason, "~> 1.4", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm", "d101480bb8115e13105b951fea66fabd2c38c470df3af0100b58793ba0a1dce7"},
+}
