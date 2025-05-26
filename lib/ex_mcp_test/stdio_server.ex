@@ -10,7 +10,7 @@ defmodule ExMCP.StdioServer do
   @impl true
   def init(_opts) do
     Process.flag(:trap_exit, true)
-    IO.write(:stderr, "ExMCP server starting\n")
+    Logger.info("ExMCP server is starting")
     send(self(), :read_line)
     {:ok, %{}}
   end
@@ -19,11 +19,11 @@ defmodule ExMCP.StdioServer do
   def handle_info(:read_line, state) do
     case IO.read(:line) do
       :eof ->
-        IO.write(:stderr, "stdin closed by parent process, shutting down\n")
+        Logger.info("stdin closed by parent process, shutting down")
         {:stop, :normal, state}
 
       {:error, reason} ->
-        IO.write(:stderr, "stdin read error: #{inspect(reason)}\n")
+        Logger.error("stdin read error: #{inspect(reason)}")
         {:stop, reason, state}
 
       line ->
@@ -35,35 +35,35 @@ defmodule ExMCP.StdioServer do
 
   @impl true
   def terminate(reason, _state) do
-    IO.write(:stderr, "stdio server terminating, reason: #{inspect(reason)}\n")
+    Logger.info("stdio server terminating, reason: #{inspect(reason)}")
     :ok
   end
 
   defp handle_line(line) do
     case Jason.decode(line) do
       {:ok, %{"method" => "cancelled"} = request} ->
-        IO.write(:stderr, "request #{inspect request["params"]} canceled\n\n")
+        Logger.info("request #{inspect(request["params"])} canceled\n")
 
-      {:ok, %{"method" => "notifications/initialized"} = _request} ->
-        IO.write(:stderr, "Client initialized - we can send requests\n\n")
+      # {:ok, %{"method" => "notifications/initialized"} = _request} ->
+      #   Logger.info("Client initialized - we can send requests\n")
 
-      {:ok, %{"method" => "notifications/" <> _} = request} ->
-        IO.write(:stderr, "Ignoring notification #{inspect request}\n\n")
+      # {:ok, %{"method" => "notifications/" <> _} = request} ->
+      #   Logger.info("Ignoring notification #{inspect request}\n")
 
       {:ok, %{} = request} ->
-        json_response =
-          request
-          |> ExMCP.Router.handle()
-          |> PhxJsonRpcWeb.Views.Helpers.render_json()
+        with %{"id" => id} = json_response when not is_nil(id) <-
+               request |> ExMCP.Router.handle() |> PhxJsonRpcWeb.Views.Helpers.render_json() do
+          Logger.info("Replying to #{inspect(request)} with #{inspect(json_response)}\n")
+          IO.write(Jason.encode!(json_response) <> "\n")
+        end
 
-        IO.write(:stderr, "Replying to #{inspect request} with #{inspect json_response}\n\n")
-        IO.write(Jason.encode!(json_response) <> "\n")
+        :ok
 
       {:error, _} ->
         error_response = %{
           jsonrpc: "2.0",
           error: %{code: -32700, message: "Parse error"},
-          id: nil
+          id: ""
         }
 
         IO.write(Jason.encode!(error_response) <> "\n")
