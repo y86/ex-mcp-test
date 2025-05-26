@@ -6,9 +6,9 @@ defmodule ExMCP.MainController do
       protocolVersion: "2024-11-05",
       capabilities: %{
         # logging: %{},
-        # prompts: %{
-        #   listChanged: false
-        # },
+        prompts: %{
+          listChanged: false
+        },
         # resources: %{
         #   subscribe: false,
         #   listChanged: false
@@ -24,7 +24,7 @@ defmodule ExMCP.MainController do
     }
   end
 
-  def initialized(%{} = _params, _context) do
+  def notifications_initialized(_params, _context) do
     nil
   end
 end

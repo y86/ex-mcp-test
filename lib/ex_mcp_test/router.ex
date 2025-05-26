@@ -16,7 +16,7 @@ defmodule ExMCP.Router do
 
   ## Tools's service
   rpc("initialize", MainController, :initialize)
-  rpc("notifications/initialized", MainController, :initialized)
+  rpc("notifications/initialized", MainController, :notifications_initialized)
 
   rpc("prompts/list", PromptsController, :list)
   rpc("resources/list", ResourcesController, :list)
